@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  api-livros:
+    container_name: api-livros-dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: build
+    network_mode: "host"
+    volumes:
+      - ./:/app
+      - ~/.m2:/root/.m2
+    environment:
+      - TZ=America/Sao_Paulo
+    command: ./mvnw spring-boot:run

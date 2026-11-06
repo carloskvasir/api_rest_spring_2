@@ -1,0 +1,43 @@
+[changelog]
+# Cabeçalho do arquivo
+header = """
+# Changelog\n
+Todos os marcos e mudanças notáveis neste projeto serão documentados neste arquivo.\n
+O formato baseia-se no [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e é gerado automaticamente via `git-cliff`.\n
+"""
+
+# Corpo (Templates das versões e commits)
+body = """
+{% if version %}\
+    ## [{{ version | trim_start_matches(pat="v") }}](https://github.com/carloskvasir/api_rest_spring/releases/tag/{{ version }}) - {{ timestamp | date(format="%Y-%m-%d") }}
+{% else %}\
+    ## [Unreleased]
+{% endif %}\
+{% for group, commits in commits | group_by(attribute="group") %}
+    ### {{ group | upper_first }}
+    {% for commit in commits %}
+        - {{ commit.message | upper_first }}\
+    {% endfor %}
+{% endfor %}\n
+"""
+trim = true
+footer = ""
+
+[git]
+conventional_commits = true
+filter_unconventional = false
+commit_preprocessors = [
+    # Procura referências como SDR-006 ou SDR-001 e transforma em links clicáveis para o nosso Índice Mestre
+    { pattern = "SDR-([0-9]{3})", replace = "[**SDR-${1}**](dev-docs/README.md)" },
+]
+commit_parsers = [
+    { message = "^feat", group = "🚀 Features" },
+    { message = "^fix", group = "🐛 Bug Fixes" },
+    { message = "^docs", group = "📚 Documentation" },
+    { message = "^perf", group = "⚡ Performance" },
+    { message = "^refactor", group = "🚜 Refactor" },
+    { message = "^test", group = "🧪 Testing" },
+    { message = "^chore", group = "⚙️ Tarefas de Manutenção (Chore)" },
+]
+filter_commits = false
+tag_pattern = "v[0-9].*"
