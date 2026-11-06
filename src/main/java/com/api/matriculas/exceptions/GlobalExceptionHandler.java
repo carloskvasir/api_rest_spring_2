@@ -32,7 +32,7 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private static final String BASE_URI = "https://api.matriculas.com/errors/";
+    public static final String BASE_URI = "https://api.matriculas.com/errors/";
     private static final URI TIPO_PADRAO = URI.create("about:blank");
 
     @Override

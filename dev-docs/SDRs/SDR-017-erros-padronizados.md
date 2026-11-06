@@ -16,7 +16,8 @@ O SDR-002 adotou a RFC 7807 (`ProblemDetail`), mas só para as exceções tratad
 ## 3. System Design Review (Análise de Impacto)
 - **Segurança:** o corpo das respostas nunca revela classes, mensagens internas nem stack traces; o detalhe fica no log do servidor.
 - **Arquitetura e Integração:** um único ponto de tratamento de erros; clientes tratam um só formato.
-- **Riscos:** requisições rejeitadas pelo Tomcat antes do Spring (ex.: URL malformada como `/cursos/%zz`) ainda recebem a página HTML de erro do servidor, que não contém stack trace.
+- **Tomcat (atualização):** requisições recusadas pelo Tomcat antes do Spring (ex.: URL malformada como `/cursos/%zz`) agora também saem em `ProblemDetail`, por um `ErrorReportValve` do host (`ErroTomcatConfig`) e por um `/error` próprio (`ErroContainerController`, oculto do OpenAPI). Cobertos por `ErroTomcatTest` (socket real) e `ProblemasConhecidosTest`.
+- **Riscos:** o corpo do valve do Tomcat é montado à mão (JSON simples, sem `invalid_params`).
 
 ## 4. Consequências
 - **Positivos:** erros uniformes em RFC 7807 (conta em "Boas práticas REST"); sem vazamento de informação.

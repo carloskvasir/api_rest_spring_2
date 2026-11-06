@@ -9,7 +9,7 @@ O formato baseia-se no [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0
 # Corpo (Templates das versões e commits)
 body = """
 {% if version %}\
-    ## [{{ version | trim_start_matches(pat="v") }}](https://github.com/carloskvasir/api_rest_spring/releases/tag/{{ version }}) - {{ timestamp | date(format="%Y-%m-%d") }}
+    ## [{{ version | trim_start_matches(pat="v") }}](https://github.com/carloskvasir/api_rest_spring_2/releases/tag/{{ version }}) - {{ timestamp | date(format="%Y-%m-%d") }}
 {% else %}\
     ## [Unreleased]
 {% endif %}\

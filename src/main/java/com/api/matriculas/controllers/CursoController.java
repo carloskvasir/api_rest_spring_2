@@ -5,6 +5,7 @@ import com.api.matriculas.dtos.CursoResponseDTO;
 import com.api.matriculas.models.Curso;
 import com.api.matriculas.services.CursoService;
 import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +36,7 @@ public class CursoController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<CursoResponseDTO>> listar(Pageable pageable) {
+    public ResponseEntity<Page<CursoResponseDTO>> listar(@ParameterObject Pageable pageable) {
         return ResponseEntity.ok(cursoService.listar(pageable).map(CursoResponseDTO::fromEntity));
     }
 

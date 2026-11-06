@@ -21,6 +21,9 @@ import java.util.List;
 @NoArgsConstructor
 public class Aluno {
 
+    /** Exige ao menos um ponto no dominio (o @Email padrao aceita "a@b"). */
+    public static final String EMAIL_REGEX = "^[^@\\s]+@[^@\\s.]+(\\.[^@\\s.]+)+$";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,7 +33,7 @@ public class Aluno {
     private String nome;
 
     @NotBlank(message = "O e-mail é obrigatório")
-    @Email(message = "O e-mail informado é inválido")
+    @Email(regexp = EMAIL_REGEX, message = "O e-mail informado é inválido")
     @Column(nullable = false)
     private String email;
 

@@ -5,6 +5,7 @@ import com.api.matriculas.dtos.AlunoResponseDTO;
 import com.api.matriculas.models.Aluno;
 import com.api.matriculas.services.AlunoService;
 import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +36,7 @@ public class AlunoController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<AlunoResponseDTO>> listar(Pageable pageable) {
+    public ResponseEntity<Page<AlunoResponseDTO>> listar(@ParameterObject Pageable pageable) {
         return ResponseEntity.ok(alunoService.listar(pageable).map(AlunoResponseDTO::fromEntity));
     }
 

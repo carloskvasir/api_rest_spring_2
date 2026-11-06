@@ -3,7 +3,7 @@
 Todos os marcos e mudanças notáveis neste projeto serão documentados neste arquivo.
 O formato baseia-se no [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e é gerado dinamicamente.
 
-## [2.0.0](https://github.com/carloskvasir/api_rest_spring/releases/tag/v2.0.0) - 2026-11-05
+## [2.0.0](https://github.com/carloskvasir/api_rest_spring_2/releases/tag/v2.0.0) - 2026-11-05
 > **Intenção da Release:** Trabalho Prático 2. O domínio de Livros deu lugar a **Cursos, Alunos e Matrículas**, com persistência real (JPA + H2), paginação via `Pageable`, remoção lógica e regras de negócio, mantendo o padrão de camadas, testes, SDRs e documentação do projeto.
 
 ### ✨ Added
@@ -20,6 +20,7 @@ O formato baseia-se no [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0
 - Integração contínua com GitHub Actions (Java 21, `./mvnw clean test`) em push e Pull Request (SDR-015)
 
 ### 🔄 Changed
+- Pendências conhecidas corrigidas: URL malformada (Tomcat) em `ProblemDetail`; decimais em campos inteiros e e-mail sem ponto no domínio retornam 400; `docs/openapi.json` com códigos de sucesso/erro e parâmetros de paginação; `bin/scaffold.sh` não sobrescreve arquivos; URLs de release apontam para o repositório atual (SDR-014, SDR-017)
 - Pacote `com.api.livros` renomeado para `com.api.matriculas`; armazenamento em memória substituído por H2 com JPA
 - `bin/scaffold.sh` gera Model JPA, Repository, DTOs, Service e Controller paginado
 - README, OpenAPI (`docs/`) e `GEMINI.md` atualizados para o novo domínio

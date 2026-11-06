@@ -1,5 +1,6 @@
 package com.api.matriculas.dtos;
 
+import com.api.matriculas.models.Aluno;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -10,7 +11,7 @@ public record AlunoRequestDTO(
     String nome,
 
     @NotBlank(message = "O e-mail é obrigatório")
-    @Email(message = "O e-mail informado é inválido")
+    @Email(regexp = Aluno.EMAIL_REGEX, message = "O e-mail informado é inválido")
     String email,
 
     @NotNull(message = "A idade é obrigatória")

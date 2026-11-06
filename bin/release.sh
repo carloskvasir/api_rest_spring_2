@@ -36,7 +36,7 @@ context.forEach((release, index) => {
     const date = new Date(release.timestamp * 1000).toISOString().split('T')[0];
     
     if (index === 0) {
-        md += `## [${vName}](https://github.com/carloskvasir/api_rest_spring/releases/tag/${release.version}) - ${date}\n`;
+        md += `## [${vName}](https://github.com/carloskvasir/api_rest_spring_2/releases/tag/${release.version}) - ${date}\n`;
         
         const groups = {};
         release.commits.forEach(commit => {
@@ -52,7 +52,7 @@ context.forEach((release, index) => {
         });
         md += `\n`;
     } else {
-        md += `## [${vName}](https://github.com/carloskvasir/api_rest_spring/releases/tag/${release.version}) - ${date}\n`;
+        md += `## [${vName}](https://github.com/carloskvasir/api_rest_spring_2/releases/tag/${release.version}) - ${date}\n`;
         md += `> *(Consulte a tag acima para ver as notas completas)*\n\n`;
     }
 });
@@ -72,7 +72,7 @@ git push origin main
 git push origin v$NEXT_VERSION
 
 npx --yes git-cliff --latest --strip header > .github_release_notes.md
-echo -e "\n---\n📖 **Histórico Completo:** Acesse nosso [CHANGELOG.md](https://github.com/carloskvasir/api_rest_spring/blob/v$NEXT_VERSION/CHANGELOG.md)." >> .github_release_notes.md
+echo -e "\n---\n📖 **Histórico Completo:** Acesse nosso [CHANGELOG.md](https://github.com/carloskvasir/api_rest_spring_2/blob/v$NEXT_VERSION/CHANGELOG.md)." >> .github_release_notes.md
 
 gh release create v$NEXT_VERSION -t "Release v$NEXT_VERSION" -F .github_release_notes.md
 rm .github_release_notes.md

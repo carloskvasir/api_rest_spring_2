@@ -10,6 +10,17 @@ LOWER_ENTITY=$(echo "$ENTITY" | tr '[:upper:]' '[:lower:]')
 PACKAGE="com.api.matriculas"
 BASE_DIR="src/main/java/com/api/matriculas"
 
+# Nunca sobrescreve codigo existente: se qualquer arquivo alvo ja existir, aborta antes de gerar algo
+EXISTENTES=""
+for ALVO in "models/$ENTITY.java" "repositories/${ENTITY}Repository.java" "dtos/${ENTITY}RequestDTO.java" \
+            "dtos/${ENTITY}ResponseDTO.java" "services/${ENTITY}Service.java" "controllers/${ENTITY}Controller.java"; do
+  [ -e "$BASE_DIR/$ALVO" ] && EXISTENTES="$EXISTENTES\n  - $BASE_DIR/$ALVO"
+done
+if [ -n "$EXISTENTES" ]; then
+  echo -e "❌ Abortado: arquivos ja existentes (nada foi alterado):$EXISTENTES"
+  exit 1
+fi
+
 echo "🚀 Gerando Boilerplate Profissional para: $ENTITY..."
 
 # 1. Model (entidade JPA)
