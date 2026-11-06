@@ -1,5 +1,8 @@
 # API REST de Cursos, Alunos e Matrículas
 
+> 🔗 **Repositório no GitHub:** [carloskvasir/api_rest_spring_2](https://github.com/carloskvasir/api_rest_spring_2)
+> _(Caso esteja avaliando este projeto a partir de um backup .zip, utilize o link acima para acessar o código online atualizado)._
+
 > 🧬 **Origem:** este projeto é derivado do [api_rest_spring](https://github.com/carloskvasir/api_rest_spring) (Trabalho 1, API de Livros, versão 1.7.1). O primeiro commit deste repositório é uma cópia fiel desse projeto base; o commit seguinte o transforma na API de Cursos, Alunos e Matrículas, mantendo o padrão de arquitetura, testes e documentação.
 
 **Trabalho Prático 2 — Desenvolvimento de API REST com Spring Boot.** API RESTful em **Java 21 + Spring Boot 3.3** para gerenciar **cursos**, **alunos** e **matrículas**, com persistência em **H2** via **Spring Data JPA**, **Bean Validation**, **paginação** com `Pageable` e regras de negócio. Os erros seguem a RFC 7807 (`ProblemDetail`) e as decisões de arquitetura estão registradas em SDRs (System Design Records).
@@ -13,7 +16,7 @@
 |---|---|---|
 | **Curso** | `id`, `nome`, `cargaHoraria`, `categoria`, `ativo` | nome obrigatório (mín. 5 caracteres); carga horária > 0; categoria e ativo obrigatórios |
 | **Aluno** | `id`, `nome`, `email`, `idade`, `telefone` | nome obrigatório; e-mail válido; idade mín. 16; telefone opcional |
-| **Matrícula** | `id`, `dataMatricula`, `status`, `aluno`, `curso` | data e status obrigatórios; aluno e curso obrigatórios. `status`: `ATIVA`, `CONCLUIDA`, `TRANCADA`, `CANCELADA` |
+| **Matrícula** | `id`, `dataMatricula`, `status`, `aluno`, `curso` | data e status obrigatórios; aluno e curso obrigatórios. `status`: `ATIVA`, `CONCLUIDA`, `TRANCADA`, `CANCELADA`. No `POST` o aluno e o curso são informados por `alunoId` e `cursoId`; a resposta traz os objetos `aluno` e `curso` completos |
 
 Relacionamentos: um curso e um aluno possuem várias matrículas (`@OneToMany`); cada matrícula pertence a um aluno e a um curso (`@ManyToOne`).
 
@@ -49,7 +52,7 @@ Curso e aluno são removidos **logicamente** (`@SoftDelete`). `DELETE /matricula
 
 **Paginação** nas listagens: `GET /cursos?page=0&size=5&sort=nome,asc` (padrão `size=10`, máximo 100). A resposta tem o formato `{"content": [...], "page": {"size", "number", "totalElements", "totalPages"}}`.
 
-**Exemplo de cadastro de matrícula**
+**Exemplo de cadastro de matrícula** (com os dados de exemplo, o aluno 2 ainda não está no curso 2; repetir o comando retorna `409`, pois já existe matrícula ativa)
 ```bash
 curl -X POST http://localhost:8080/matriculas -H "Content-Type: application/json" \
   -d '{"dataMatricula":"2026-04-01","status":"ATIVA","alunoId":2,"cursoId":2}'
@@ -96,7 +99,7 @@ A API sobe na porta `8080` com dados de exemplo (4 cursos, sendo 1 inativo; 4 al
 
 ## 📚 Documentação
 
-* Documentação online (Swagger UI): 👉 **[Acessar ao vivo](https://carloskvasir.github.io/api_rest_spring/)**
+* Documentação online (Swagger UI): 👉 **[Acessar ao vivo](https://carloskvasir.github.io/api_rest_spring_2/)**
 * Decisões de arquitetura (SDRs), enunciado, design e plano de implementação: pasta [`/dev-docs/`](dev-docs/README.md). Resumo da execução e dos resultados: [SDR-014](dev-docs/SDRs/SDR-014-planejamento-execucao-resultados.md).
 * Histórico de mudanças: [CHANGELOG.md](CHANGELOG.md).
 
