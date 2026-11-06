@@ -53,8 +53,8 @@ class MatriculaServiceTest {
     }
 
     private void aluno_e_curso_existem() {
-        when(alunoService.buscarPorId(1L)).thenReturn(aluno);
-        when(cursoService.buscarPorId(2L)).thenReturn(curso);
+        when(alunoService.buscarParaEscrita(1L)).thenReturn(aluno);
+        when(cursoService.buscarParaEscrita(2L)).thenReturn(curso);
     }
 
     @Test
@@ -125,7 +125,7 @@ class MatriculaServiceTest {
 
     @Test
     void alunoInexistentePropaga404() {
-        when(alunoService.buscarPorId(1L)).thenThrow(new ResourceNotFoundException("Aluno não encontrado com id: 1"));
+        when(alunoService.buscarParaEscrita(1L)).thenThrow(new ResourceNotFoundException("Aluno não encontrado com id: 1"));
 
         assertThatThrownBy(() -> matriculaService.realizar(dto(StatusMatricula.ATIVA)))
                 .isInstanceOf(ResourceNotFoundException.class);
@@ -158,6 +158,7 @@ class MatriculaServiceTest {
     void reativarMatriculaQuandoJaExisteOutraAtivaLancaConflict() {
         Matricula m = existente(StatusMatricula.CANCELADA);
         when(matriculaRepository.findById(10L)).thenReturn(Optional.of(m));
+        aluno_e_curso_existem();
         when(matriculaRepository.existsByAlunoIdAndCursoIdAndStatus(1L, 2L, StatusMatricula.ATIVA)).thenReturn(true);
 
         assertThatThrownBy(() -> matriculaService.atualizarStatus(10L, StatusMatricula.ATIVA))
@@ -169,6 +170,7 @@ class MatriculaServiceTest {
         curso.setAtivo(false);
         Matricula m = existente(StatusMatricula.CANCELADA);
         when(matriculaRepository.findById(10L)).thenReturn(Optional.of(m));
+        aluno_e_curso_existem();
 
         assertThatThrownBy(() -> matriculaService.atualizarStatus(10L, StatusMatricula.ATIVA))
                 .isInstanceOf(BusinessRuleException.class)

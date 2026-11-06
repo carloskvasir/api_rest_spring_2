@@ -27,8 +27,9 @@ public class MatriculaService {
 
     @Transactional
     public Matricula realizar(MatriculaRequestDTO dto) {
-        Aluno aluno = alunoService.buscarPorId(dto.alunoId());
-        Curso curso = cursoService.buscarPorId(dto.cursoId());
+        // Locks sempre na ordem aluno -> curso (evita deadlock); serializam matriculas e exclusoes concorrentes (SDR-016)
+        Aluno aluno = alunoService.buscarParaEscrita(dto.alunoId());
+        Curso curso = cursoService.buscarParaEscrita(dto.cursoId());
 
         validarElegibilidade(aluno, curso);
         if (dto.status() == StatusMatricula.ATIVA) {
@@ -58,8 +59,10 @@ public class MatriculaService {
     public Matricula atualizarStatus(Long id, StatusMatricula novoStatus) {
         Matricula matricula = buscarPorId(id);
         if (novoStatus == StatusMatricula.ATIVA && matricula.getStatus() != StatusMatricula.ATIVA) {
-            validarElegibilidade(matricula.getAluno(), matricula.getCurso());
-            validarSemMatriculaAtiva(matricula.getAluno().getId(), matricula.getCurso().getId());
+            Aluno aluno = alunoService.buscarParaEscrita(matricula.getAluno().getId());
+            Curso curso = cursoService.buscarParaEscrita(matricula.getCurso().getId());
+            validarElegibilidade(aluno, curso);
+            validarSemMatriculaAtiva(aluno.getId(), curso.getId());
         }
         matricula.setStatus(novoStatus);
         return matriculaRepository.save(matricula);

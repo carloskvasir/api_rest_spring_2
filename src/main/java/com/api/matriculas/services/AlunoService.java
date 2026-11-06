@@ -35,6 +35,13 @@ public class AlunoService {
             .orElseThrow(() -> new ResourceNotFoundException("Aluno não encontrado com id: " + id));
     }
 
+    /** Busca com lock de escrita; deve ser chamado dentro de uma transacao (SDR-016). */
+    @Transactional
+    public Aluno buscarParaEscrita(Long id) {
+        return alunoRepository.buscarParaEscrita(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Aluno não encontrado com id: " + id));
+    }
+
     @Transactional
     public Aluno atualizar(Long id, AlunoRequestDTO dto) {
         return alunoRepository.save(aplicar(buscarPorId(id), dto));
@@ -42,7 +49,7 @@ public class AlunoService {
 
     @Transactional
     public void remover(Long id) {
-        Aluno aluno = buscarPorId(id);
+        Aluno aluno = buscarParaEscrita(id);
         if (matriculaRepository.existsByAlunoId(id)) {
             throw new ConflictException("Não é possível excluir o aluno " + id + ": existem matrículas vinculadas.");
         }

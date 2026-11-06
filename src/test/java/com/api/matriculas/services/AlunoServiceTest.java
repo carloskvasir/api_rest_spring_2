@@ -58,7 +58,7 @@ class AlunoServiceTest {
 
     @Test
     void removerAlunoComMatriculasDeveLancarConflict() {
-        when(alunoRepository.findById(1L)).thenReturn(Optional.of(aluno(1L)));
+        when(alunoRepository.buscarParaEscrita(1L)).thenReturn(Optional.of(aluno(1L)));
         when(matriculaRepository.existsByAlunoId(1L)).thenReturn(true);
 
         assertThatThrownBy(() -> alunoService.remover(1L)).isInstanceOf(ConflictException.class);
@@ -68,7 +68,7 @@ class AlunoServiceTest {
     @Test
     void removerAlunoSemMatriculasDeveExcluir() {
         Aluno a = aluno(1L);
-        when(alunoRepository.findById(1L)).thenReturn(Optional.of(a));
+        when(alunoRepository.buscarParaEscrita(1L)).thenReturn(Optional.of(a));
         when(matriculaRepository.existsByAlunoId(1L)).thenReturn(false);
 
         alunoService.remover(1L);

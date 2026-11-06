@@ -28,6 +28,7 @@ Cada tarefa seguiu RED → GREEN (o teste falhou antes de existir código de pro
 | 7 | `a15fcf7` | Seed e gerador de scaffold atualizado | 70 |
 | 8 | `7f9bd8a`, `0e9f45a`, `a567382` | SDRs, README, CHANGELOG, OpenAPI (versão 2.0.0) | 70 |
 | Revisão | (commit de correções) | Correções da revisão final independente | 74 |
+| Pós-revisão | (commits finais) | CI (SDR-015), console H2 no Docker e controle de concorrência (SDR-016) | 76 |
 
 **Desvios e descobertas durante a execução** (todos cobertos por teste ou validação):
 1. `@ManyToOne(fetch = LAZY)` para entidade com `@SoftDelete` é recusado pelo Hibernate 6.5 → fetch padrão (SDR-011).
@@ -37,7 +38,7 @@ Cada tarefa seguiu RED → GREEN (o teste falhou antes de existir código de pro
 5. **Revisão final independente da branch** (leitura do código, 70 testes e cerca de 60 cenários manuais) encontrou dois pontos corrigidos por TDD (teste vermelho, depois verde): (a) `PUT /matriculas/{id}` com `ATIVA` reativava matrícula em curso inativo, contornando a regra 1 do enunciado; (b) `page=2147483647&size=100` retornava 500 com stack trace, agora 400 em `ProblemDetail`.
 
 ## 4. Resultados
-- `./mvnw clean test`: **74 testes, 0 falhas, `BUILD SUCCESS`** (unitários com Mockito, `@DataJpaTest`, `@WebMvcTest` e integração com MockMvc + H2).
+- `./mvnw clean test`: **76 testes, 0 falhas, `BUILD SUCCESS`** (unitários com Mockito, `@DataJpaTest`, `@WebMvcTest` e integração com MockMvc + H2).
 - Validação manual com `curl` na aplicação em execução (`./mvnw spring-boot:run`): listagem paginada e ordenada (200); matrícula duplicada ativa (409); curso inativo (422); matrícula válida (201); excluir curso e aluno com matrículas (409); validação de aluno com e-mail e idade inválidos (400 com `invalid_params`); cancelamento (204) mantendo o registro com status `CANCELADA`; `sort` inválido (400); `/h2-console` e Swagger UI na raiz (200).
 - Após as correções da revisão, a aplicação em execução confirmou: reativar matrícula em curso inativo → 422; página com offset gigante → 400.
 - A aplicação inicia sem erros e semeia 4 cursos (1 inativo), 4 alunos e 4 matrículas.
@@ -53,7 +54,7 @@ Cada tarefa seguiu RED → GREEN (o teste falhou antes de existir código de pro
 | Boas práticas REST (0,5) | Verbos e status corretos, `Location` no POST, RFC 7807, SDR-013 |
 
 ## 5. Pendências conhecidas (adiadas de propósito)
-- **Condição de corrida:** requisições paralelas de matrícula `ATIVA` para o mesmo aluno e curso podem criar duas ativas (verificação e inserção sem lock). Impacto baixo em H2 de demonstração; solução prevista: `@Lock(PESSIMISTIC_WRITE)` no aluno durante `realizar`.
+- ~~Condição de corrida em matrículas `ATIVA` duplicadas~~ — **corrigida** com lock pessimista (SDR-016).
 - `sort` por coleção (`matriculas.*`) pode repetir itens entre páginas; falta uma lista de propriedades ordenáveis.
 - Erros 404 de rota, 405 e 415 usam o formato padrão do Spring (não `ProblemDetail`); `server.error.include-stacktrace` não está desligado.
 - `docs/openapi.json` mostra só o código 200 e `Pageable` como objeto; faltam `@ApiResponse` e `@ParameterObject`.
