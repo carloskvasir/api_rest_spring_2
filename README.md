@@ -92,6 +92,9 @@ A API sobe na porta `8080` com dados de exemplo (4 cursos, sendo 1 inativo; 4 al
 * **Swagger UI (contrato interativo):** http://localhost:8080/
 * **Console do H2:** http://localhost:8080/h2-console — JDBC URL `jdbc:h2:mem:matriculas`, usuário `sa`, senha vazia
 
+### Opção 3 — Nuvem (DigitalOcean + Terraform)
+Para testar sem instalar nada localmente, veja o passo a passo em [`infra/digitalocean`](infra/digitalocean/README.md) (SDR-018).
+
 ### Testes
 ```bash
 ./mvnw clean test

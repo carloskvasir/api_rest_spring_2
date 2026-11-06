@@ -36,3 +36,10 @@ build/
 dev-docs/scratch/
 .agents/scratch/
 .superpowers/
+
+### Terraform ###
+.terraform/
+*.tfstate
+*.tfstate.*
+terraform.tfvars
+crash.log

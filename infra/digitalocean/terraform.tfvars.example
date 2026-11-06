@@ -1,0 +1,7 @@
+# Copie para terraform.tfvars e preencha. Esse arquivo (com o token) NUNCA deve ser commitado.
+do_token    = "dop_v1_..."
+alert_email = "voce@exemplo.com"
+
+# Opcionais
+# region         = "nyc3"
+# ssh_public_key = "ssh-ed25519 AAAA... voce@maquina"

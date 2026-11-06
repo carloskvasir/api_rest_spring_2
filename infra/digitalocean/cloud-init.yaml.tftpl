@@ -1,0 +1,28 @@
+#cloud-config
+package_update: true
+packages:
+  - docker.io
+  - git
+
+write_files:
+  - path: /opt/api-matriculas/deploy.sh
+    permissions: "0755"
+    content: |
+      #!/bin/bash
+      set -euo pipefail
+      # Swap de 2 GB: a compilacao do Maven nao estoura a memoria em droplets pequenos
+      if [ ! -f /swapfile ]; then
+        fallocate -l 2G /swapfile && chmod 600 /swapfile && mkswap /swapfile && swapon /swapfile
+      fi
+      rm -rf /opt/api-matriculas/src
+      git clone --depth 1 --branch "${repo_ref}" "${repo_url}" /opt/api-matriculas/src
+      docker build -t api-matriculas /opt/api-matriculas/src
+      docker rm -f api-matriculas 2>/dev/null || true
+      docker run -d --name api-matriculas --restart unless-stopped -p 80:8080 \
+        -e TZ=America/Sao_Paulo \
+        -e SPRING_H2_CONSOLE_ENABLED=false \
+        api-matriculas
+
+runcmd:
+  - systemctl enable --now docker
+  - /opt/api-matriculas/deploy.sh > /var/log/api-matriculas-deploy.log 2>&1

@@ -7,6 +7,7 @@ O formato baseia-se no [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0
 > **Intenção da Release:** Trabalho Prático 2. O domínio de Livros deu lugar a **Cursos, Alunos e Matrículas**, com persistência real (JPA + H2), paginação via `Pageable`, remoção lógica e regras de negócio, mantendo o padrão de camadas, testes, SDRs e documentação do projeto.
 
 ### ✨ Added
+- Deploy na DigitalOcean com Terraform (`infra/digitalocean`): droplet com Docker, firewall e alertas por e-mail (SDR-018)
 - Entidades `Curso`, `Aluno` e `Matricula` com relacionamentos `@OneToMany`/`@ManyToOne` e camada `repositories` (SDR-010)
 - CRUD completo de cursos e alunos; matrículas com atualização de status e cancelamento
 - Paginação com `Pageable` (`page`, `size`, `sort`) e resposta de página estável (SDR-012)
