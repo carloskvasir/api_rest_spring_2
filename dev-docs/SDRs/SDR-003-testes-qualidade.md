@@ -1,7 +1,7 @@
 # SDR-003: Adoção de Cultura de Testes e Qualidade
 
 **Data:** 2026-10-01
-**Status:** Aceito
+**Status:** Aceito (exemplos de `Livro*Test` substituídos pelos testes de Curso, Aluno e Matrícula, ver [SDR-014](SDR-014-planejamento-execucao-resultados.md))
 
 ## 1. Contexto e Motivação
 Garantir o funcionamento contínuo do sistema, atestar que as regras de negócio foram implementadas perfeitamente e blindar a API RESTful (validações, HTTP status) contra problemas em evoluções futuras.

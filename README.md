@@ -1,40 +1,104 @@
-# API REST de Controle de Livros
+# API REST de Cursos, Alunos e Matrículas
 
-> 🔗 **Repositório Oficial no GitHub:** [carloskvasir/api_rest_spring](https://github.com/carloskvasir/api_rest_spring)
-> _(Caso esteja avaliando este projeto a partir de um backup .zip, utilize o link acima para acessar o código online atualizado)._
+> 🧬 **Origem:** este projeto é derivado do [api_rest_spring](https://github.com/carloskvasir/api_rest_spring) (Trabalho 1, API de Livros, versão 1.7.1). O primeiro commit deste repositório é uma cópia fiel desse projeto base; o commit seguinte o transforma na API de Cursos, Alunos e Matrículas, mantendo o padrão de arquitetura, testes e documentação.
 
-Este projeto é uma API RESTful avançada desenvolvida em **Java + Spring Boot** para gerenciar um cadastro de livros, seguindo rigorosos padrões RESTful (RFC 7807, cabeçalhos Location, PATCH parcial) e arquitetura validada por SDRs (System Design Reviews). O armazenamento dos dados é realizado em memória.
+**Trabalho Prático 2 — Desenvolvimento de API REST com Spring Boot.** API RESTful em **Java 21 + Spring Boot 3.3** para gerenciar **cursos**, **alunos** e **matrículas**, com persistência em **H2** via **Spring Data JPA**, **Bean Validation**, **paginação** com `Pageable` e regras de negócio. Os erros seguem a RFC 7807 (`ProblemDetail`) e as decisões de arquitetura estão registradas em SDRs (System Design Records).
 
-## 👥 Alunos
+## 👥 Aluno
 * Carlos Kvasir Lima
-* David Marlon
+
+## 📝 Descrição da API
+
+| Entidade | Campos | Regras |
+|---|---|---|
+| **Curso** | `id`, `nome`, `cargaHoraria`, `categoria`, `ativo` | nome obrigatório (mín. 5 caracteres); carga horária > 0; categoria e ativo obrigatórios |
+| **Aluno** | `id`, `nome`, `email`, `idade`, `telefone` | nome obrigatório; e-mail válido; idade mín. 16; telefone opcional |
+| **Matrícula** | `id`, `dataMatricula`, `status`, `aluno`, `curso` | data e status obrigatórios; aluno e curso obrigatórios. `status`: `ATIVA`, `CONCLUIDA`, `TRANCADA`, `CANCELADA` |
+
+Relacionamentos: um curso e um aluno possuem várias matrículas (`@OneToMany`); cada matrícula pertence a um aluno e a um curso (`@ManyToOne`).
+
+### Regras de negócio
+| Situação | Resposta |
+|---|---|
+| Matrícula em curso inativo | `422 Unprocessable Entity` |
+| Matrícula de aluno menor de 16 anos | `422 Unprocessable Entity` |
+| Excluir curso ou aluno que possua matrículas | `409 Conflict` |
+| Nova matrícula `ATIVA` para quem já tem uma `ATIVA` no mesmo curso (regra extra) | `409 Conflict` |
+
+Curso e aluno são removidos **logicamente** (`@SoftDelete`). `DELETE /matriculas/{id}` **cancela** a matrícula (status `CANCELADA`) e mantém o registro.
+
+## 🔌 Endpoints
+
+| Recurso | Método e rota | Descrição | Sucesso |
+|---|---|---|---|
+| Cursos | `POST /cursos` | Cadastrar curso | 201 + `Location` |
+| | `GET /cursos` | Listar (paginado) | 200 |
+| | `GET /cursos/{id}` | Buscar por ID | 200 |
+| | `PUT /cursos/{id}` | Atualizar curso | 200 |
+| | `DELETE /cursos/{id}` | Remover curso | 204 |
+| Alunos | `POST /alunos` | Cadastrar aluno | 201 + `Location` |
+| | `GET /alunos` | Listar (paginado) | 200 |
+| | `GET /alunos/{id}` | Buscar por ID | 200 |
+| | `PUT /alunos/{id}` | Atualizar aluno | 200 |
+| | `DELETE /alunos/{id}` | Remover aluno | 204 |
+| Matrículas | `POST /matriculas` | Realizar matrícula | 201 + `Location` |
+| | `GET /matriculas` | Listar (paginado) | 200 |
+| | `GET /matriculas/{id}` | Buscar por ID | 200 |
+| | `PUT /matriculas/{id}` | Atualizar **somente o status** (`{"status": "CONCLUIDA"}`) | 200 |
+| | `DELETE /matriculas/{id}` | Cancelar matrícula | 204 |
+
+**Paginação** nas listagens: `GET /cursos?page=0&size=5&sort=nome,asc` (padrão `size=10`, máximo 100). A resposta tem o formato `{"content": [...], "page": {"size", "number", "totalElements", "totalPages"}}`.
+
+**Exemplo de cadastro de matrícula**
+```bash
+curl -X POST http://localhost:8080/matriculas -H "Content-Type: application/json" \
+  -d '{"dataMatricula":"2026-04-01","status":"ATIVA","alunoId":2,"cursoId":2}'
+```
+
+**Exemplo de erro de validação (400)**
+```json
+{"title":"Bad Request","status":400,"detail":"Erro de validação nos campos informados.",
+ "invalid_params":{"email":"O e-mail informado é inválido","idade":"A idade mínima é 16 anos"}}
+```
 
 ## 🛠️ Tecnologias e Ferramentas
 
 * **Linguagem:** Java 21
-* **Framework:** Spring Boot 3.3.x
+* **Framework:** Spring Boot 3.3.x (Web, Validation, Data JPA)
+* **Banco de dados:** H2 em memória
 * **Build Tool:** Maven (Wrapper)
-* **Produtividade:** Lombok (Reducao de Boilerplate)
-* **Qualidade:** Testes Unitários e de Integração (JUnit 5 + MockMvc)
-* **Infraestrutura:** Docker e Docker Compose (com Hot-Reload mapeado para Dev)
+* **Produtividade:** Lombok
+* **Documentação:** Springdoc OpenAPI (Swagger UI)
+* **Qualidade:** JUnit 5, Mockito, AssertJ e MockMvc
+* **Infraestrutura:** Docker e Docker Compose (com Hot-Reload para Dev)
 
-## 🚀 Como Executar (Ambiente de Desenvolvimento)
+## 🚀 Como Executar
 
-O ambiente foi totalmente dockerizado com **Live Reload**. Qualquer alteração feita e salva no código da sua IDE será refletida automaticamente na API em menos de 1 segundo.
+### Opção 1 — Maven (requer Java 21)
+```bash
+./mvnw spring-boot:run
+```
 
-1. Certifique-se de ter o Docker instalado e rodando.
-2. Na raiz do projeto, suba a aplicação em background:
-   ```bash
-   docker compose up -d
-   ```
-3. A API estará disponível na porta `8080`: **http://localhost:8080/**
+### Opção 2 — Docker (com Live Reload)
+```bash
+docker compose up -d
+```
 
-## 📚 Endpoints e Documentação
+A API sobe na porta `8080` com dados de exemplo (4 cursos, sendo 1 inativo; 4 alunos; 4 matrículas):
 
-Para facilitar os testes (via Postman, Insomnia ou Navegador), **acesse a raiz da aplicação (`http://localhost:8080/`)**. 
-A raiz da aplicação redirecionará você para a maravilhosa interface visual do Swagger UI, contendo o contrato OpenAPI detalhado e executável de todos os endpoints, seus métodos HTTP e exemplos de payloads esperados para cadastro e atualização.
+* **Swagger UI (contrato interativo):** http://localhost:8080/
+* **Console do H2:** http://localhost:8080/h2-console — JDBC URL `jdbc:h2:mem:matriculas`, usuário `sa`, senha vazia
 
-As documentações das decisões arquiteturais (SDRs) e padrões da IA (GEMINI.md) estão armazenadas na pasta `/dev-docs/`.
+### Testes
+```bash
+./mvnw clean test
+```
+
+## 📚 Documentação
+
+* Documentação online (Swagger UI): 👉 **[Acessar ao vivo](https://carloskvasir.github.io/api_rest_spring/)**
+* Decisões de arquitetura (SDRs), enunciado, design e plano de implementação: pasta [`/dev-docs/`](dev-docs/README.md). Resumo da execução e dos resultados: [SDR-014](dev-docs/SDRs/SDR-014-planejamento-execucao-resultados.md).
+* Histórico de mudanças: [CHANGELOG.md](CHANGELOG.md).
 
 ## 📜 Licença
 
@@ -42,9 +106,3 @@ Este projeto está licenciado sob a **Mozilla Public License Version 2.0 (MPL-2.
 Copyright (c) 2026 Carlos Kvasir - [carloskvasir.dev](https://carloskvasir.dev)
 
 Veja o arquivo [LICENSE](LICENSE) para mais detalhes sobre as permissões e limitações.
-
-## 🌐 Documentação Online (Swagger UI)
-
-A documentação interativa e os contratos da API estão hospedados publicamente através do GitHub Pages. Você pode interagir com a interface (ler schemas, descobrir payloads e formatos esperados) sem precisar executar o projeto localmente:
-
-👉 **[Acessar a Documentação da API ao vivo (Swagger Online)](https://carloskvasir.github.io/api_rest_spring/)**

@@ -8,12 +8,13 @@
 - O idioma oficial do código (quando não for termo técnico do framework), documentação e commits é **Português (PT-BR)**.
 
 ## 🏗️ Arquitetura e Decisões
-- Respeite a arquitetura em **Camadas** definida: `controllers`, `services`, `dtos`, `models`, `exceptions`.
+- Respeite a arquitetura em **Camadas** definida: `controllers`, `services`, `repositories`, `dtos`, `models`, `exceptions`.
 - Registre decisões técnicas, arquiteturais ou de negócio importantes utilizando SDRs (System Design Records) no diretório `dev-docs/SDRs/`.
 
 ## 📦 Padrões de Código
 - Utilize sempre DTOs para entrada/saída (nunca exponha ou receba as Entidades diretamente nos endpoints).
-- Faça tratamento centralizado de erros com `@RestControllerAdvice`.
+- Faça tratamento centralizado de erros com `@ControllerAdvice` retornando `ProblemDetail` (RFC 7807).
+- Persistência com Spring Data JPA (H2) e remoção lógica via `@SoftDelete` (SDR-010 e SDR-011); listagens sempre paginadas com `Pageable` (SDR-012).
 
 ## 🧪 Qualidade de Software e Testes
 - Atue sempre como um analisador estático (um linter rigoroso): Aja ativamente validando legibilidade, complexidade ciclomática e adoção de boas práticas (Clean Code).

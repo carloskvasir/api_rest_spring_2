@@ -13,3 +13,6 @@ Implementar um script local (`bin/scaffold.sh`) para atuar como um "Gerador" de 
 - Aceleração drástica do desenvolvimento (basta digitar `./bin/scaffold.sh Entidade`).
 - Evita erros humanos ao esquecer anotações essenciais (`@Valid`, `@RestController`).
 - Padronização arquitetural imaculada.
+
+## 4. Atualização (2026-11-05)
+Com a adoção de JPA (SDR-010), o gerador passou a produzir 6 arquivos: Model (`@Entity`), **Repository**, `RequestDTO`, `ResponseDTO`, Service (`@Transactional`, `Pageable`) e Controller (listagem paginada), sem listas em memória nem `PATCH`.

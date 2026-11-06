@@ -1,7 +1,7 @@
 # SDR-001: Escolha da Stack Tecnológica Base
 
 **Data:** 2026-10-01
-**Status:** Aceito
+**Status:** Aceito (armazenamento superado pelo [SDR-010](SDR-010-jpa-h2-repository.md))
 
 ## 1. Contexto
 O projeto requer o desenvolvimento de uma API REST simples para Controle de Livros (Trabalho 1). Precisávamos definir a versão do Java, gerenciador de dependências, arquitetura e padrão de versionamento.

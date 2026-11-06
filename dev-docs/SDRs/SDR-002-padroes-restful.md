@@ -1,7 +1,7 @@
 # SDR-002: Adequação a Padrões RESTful Avançados
 
 **Data:** 2026-10-01
-**Status:** Aceito
+**Status:** Aceito (paginação superada pelo [SDR-012](SDR-012-paginacao-pageable.md); `PATCH` removido, ver [SDR-013](SDR-013-regras-de-negocio-e-codigos-http.md))
 
 ## 1. Contexto e Motivação
 A implementação inicial da API atendia todos os requisitos do trabalho (GET, POST, PUT, DELETE), mas carecia de maturidade REST (RFCs e Richardson Maturity Model). O objetivo é evoluir a API para padrões de mercado.

@@ -1,40 +1,59 @@
 #!/bin/bash
 if [ -z "$1" ]; then
-  echo "❌ Uso: ./bin/scaffold.sh <NomeDaEntidade> (ex: Autor)"
+  echo "❌ Uso: ./bin/scaffold.sh <NomeDaEntidade> (ex: Professor)"
   exit 1
 fi
 
 ENTITY=$1
-# Transforma a primeira letra em minúscula para rotas (ex: Autor -> autor)
+# Rota em minusculas com plural simples (ex: Professor -> /professors; ajuste manualmente se necessario)
 LOWER_ENTITY=$(echo "$ENTITY" | tr '[:upper:]' '[:lower:]')
-PACKAGE="com.api.livros"
-BASE_DIR="src/main/java/com/api/livros"
+PACKAGE="com.api.matriculas"
+BASE_DIR="src/main/java/com/api/matriculas"
 
 echo "🚀 Gerando Boilerplate Profissional para: $ENTITY..."
 
-# 1. Model
+# 1. Model (entidade JPA)
 cat << EOF2 > "$BASE_DIR/models/$ENTITY.java"
 package $PACKAGE.models;
 
-import lombok.Data;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Entity
+@Getter
+@Setter
 @NoArgsConstructor
 public class $ENTITY {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    // TODO: Adicionar os campos da entidade $ENTITY
+    // TODO: Adicionar os campos da entidade $ENTITY (e @SoftDelete se a remocao for logica, ver SDR-011)
 }
 EOF2
 
-# 2. DTOs
+# 2. Repository
+cat << EOF2 > "$BASE_DIR/repositories/${ENTITY}Repository.java"
+package $PACKAGE.repositories;
+
+import $PACKAGE.models.$ENTITY;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ${ENTITY}Repository extends JpaRepository<$ENTITY, Long> {
+}
+EOF2
+
+# 3. DTOs
 cat << EOF2 > "$BASE_DIR/dtos/${ENTITY}RequestDTO.java"
 package $PACKAGE.dtos;
 
-import jakarta.validation.constraints.NotBlank;
-
 public record ${ENTITY}RequestDTO(
-    // TODO: Adicionar campos e anotações de validação (ex: @NotBlank)
+    // TODO: Adicionar campos e anotacoes de validacao (ex: @NotBlank)
 ) {}
 EOF2
 
@@ -55,60 +74,59 @@ public record ${ENTITY}ResponseDTO(
 }
 EOF2
 
-# 3. Service
+# 4. Service
 cat << EOF2 > "$BASE_DIR/services/${ENTITY}Service.java"
 package $PACKAGE.services;
 
 import $PACKAGE.dtos.${ENTITY}RequestDTO;
 import $PACKAGE.exceptions.ResourceNotFoundException;
 import $PACKAGE.models.$ENTITY;
+import $PACKAGE.repositories.${ENTITY}Repository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class ${ENTITY}Service {
-    private final List<$ENTITY> db = new ArrayList<>();
-    private final AtomicLong idCounter = new AtomicLong(1);
 
+    private final ${ENTITY}Repository repository;
+
+    @Transactional
     public $ENTITY salvar(${ENTITY}RequestDTO dto) {
         $ENTITY entity = new $ENTITY();
-        entity.setId(idCounter.getAndIncrement());
         // TODO: Mapear dto para entidade
-        db.add(entity);
-        return entity;
+        return repository.save(entity);
     }
 
-    public List<$ENTITY> listarTodos(int page, int size) {
-        int start = Math.min(page * size, db.size());
-        int end = Math.min((page + 1) * size, db.size());
-        return new ArrayList<>(db.subList(start, end));
+    @Transactional(readOnly = true)
+    public Page<$ENTITY> listar(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
+    @Transactional(readOnly = true)
     public $ENTITY buscarPorId(Long id) {
-        return db.stream()
-            .filter(e -> e.getId().equals(id))
-            .findFirst()
+        return repository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("$ENTITY não encontrado com id: " + id));
     }
 
+    @Transactional
     public $ENTITY atualizar(Long id, ${ENTITY}RequestDTO dto) {
         $ENTITY entity = buscarPorId(id);
         // TODO: Atualizar campos
-        return entity;
+        return repository.save(entity);
     }
 
+    @Transactional
     public void remover(Long id) {
-        $ENTITY entity = buscarPorId(id);
-        db.remove(entity);
+        repository.delete(buscarPorId(id));
     }
 }
 EOF2
 
-# 4. Controller
+# 5. Controller
 cat << EOF2 > "$BASE_DIR/controllers/${ENTITY}Controller.java"
 package $PACKAGE.controllers;
 
@@ -118,14 +136,13 @@ import $PACKAGE.models.$ENTITY;
 import $PACKAGE.services.${ENTITY}Service;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/${LOWER_ENTITY}s")
@@ -143,25 +160,18 @@ public class ${ENTITY}Controller {
     }
 
     @GetMapping
-    public ResponseEntity<List<${ENTITY}ResponseDTO>> listar(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        List<${ENTITY}ResponseDTO> lista = service.listarTodos(page, size).stream()
-                .map(${ENTITY}ResponseDTO::fromEntity)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(lista);
+    public ResponseEntity<Page<${ENTITY}ResponseDTO>> listar(Pageable pageable) {
+        return ResponseEntity.ok(service.listar(pageable).map(${ENTITY}ResponseDTO::fromEntity));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<${ENTITY}ResponseDTO> buscarPorId(@PathVariable Long id) {
-        $ENTITY entity = service.buscarPorId(id);
-        return ResponseEntity.ok(${ENTITY}ResponseDTO.fromEntity(entity));
+        return ResponseEntity.ok(${ENTITY}ResponseDTO.fromEntity(service.buscarPorId(id)));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<${ENTITY}ResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody ${ENTITY}RequestDTO dto) {
-        $ENTITY atualizado = service.atualizar(id, dto);
-        return ResponseEntity.ok(${ENTITY}ResponseDTO.fromEntity(atualizado));
+        return ResponseEntity.ok(${ENTITY}ResponseDTO.fromEntity(service.atualizar(id, dto)));
     }
 
     @DeleteMapping("/{id}")
@@ -172,4 +182,4 @@ public class ${ENTITY}Controller {
 }
 EOF2
 
-echo "✅ Gerador concluído! Os 5 arquivos base (Model, RequestDTO, ResponseDTO, Service e Controller) para a entidade '$ENTITY' foram injetados perfeitamente."
+echo "✅ Gerador concluído! Os 6 arquivos base (Model, Repository, RequestDTO, ResponseDTO, Service e Controller) para a entidade '$ENTITY' foram gerados."

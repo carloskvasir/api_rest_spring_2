@@ -3,6 +3,26 @@
 Todos os marcos e mudanças notáveis neste projeto serão documentados neste arquivo.
 O formato baseia-se no [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e é gerado dinamicamente.
 
+## [2.0.0](https://github.com/carloskvasir/api_rest_spring/releases/tag/v2.0.0) - 2026-11-05
+> **Intenção da Release:** Trabalho Prático 2. O domínio de Livros deu lugar a **Cursos, Alunos e Matrículas**, com persistência real (JPA + H2), paginação via `Pageable`, remoção lógica e regras de negócio, mantendo o padrão de camadas, testes, SDRs e documentação do projeto.
+
+### ✨ Added
+- Entidades `Curso`, `Aluno` e `Matricula` com relacionamentos `@OneToMany`/`@ManyToOne` e camada `repositories` (SDR-010)
+- CRUD completo de cursos e alunos; matrículas com atualização de status e cancelamento
+- Paginação com `Pageable` (`page`, `size`, `sort`) e resposta de página estável (SDR-012)
+- Regras de negócio: curso inativo (422), aluno menor de 16 anos (422), exclusão com matrículas (409) e matrícula ativa duplicada (409) (SDR-013)
+- Remoção lógica com `@SoftDelete` em cursos e alunos (SDR-011)
+- Seed de cursos, alunos e matrículas; console H2 em `/h2-console`
+- SDR-010 a SDR-014, design, plano e enunciado em `dev-docs/`
+
+### 🔄 Changed
+- Pacote `com.api.livros` renomeado para `com.api.matriculas`; armazenamento em memória substituído por H2 com JPA
+- `bin/scaffold.sh` gera Model JPA, Repository, DTOs, Service e Controller paginado
+- README, OpenAPI (`docs/`) e `GEMINI.md` atualizados para o novo domínio
+
+### 🗑️ Removed
+- Domínio de Livros e Categorias, incluindo o endpoint `PATCH`
+
 ## [1.7.1](https://github.com/carloskvasir/api_rest_spring/releases/tag/v1.7.1) - 2026-10-02
 ### ⚙️ Tarefas de Manutenção (Chore)
 - automatiza a atualizacao da versao do swagger durante o processo de release

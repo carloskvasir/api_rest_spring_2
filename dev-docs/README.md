@@ -17,10 +17,24 @@ Este índice serve como um mapa rápido para as inteligências artificiais e des
 | **SDR-007** | Automação de Seeds (DataSeeder) e Documentação Estática (GitHub Pages) | [Acessar Documento](SDRs/SDR-007-automacao-dev-e-docs-estaticas.md) |
 | **SDR-008** | Adoção do Lombok e Template de Pull Requests | [Acessar Documento](SDRs/SDR-008-adocao-do-lombok.md) |
 | **SDR-009** | Gerador de Scaffold e Produtividade | [Acessar Documento](SDRs/SDR-009-gerador-de-scaffold.md) |
+| **SDR-010** | Persistência com Spring Data JPA, H2 e camada Repository | [Acessar Documento](SDRs/SDR-010-jpa-h2-repository.md) |
+| **SDR-011** | Remoção lógica com `@SoftDelete` em Curso e Aluno | [Acessar Documento](SDRs/SDR-011-soft-delete.md) |
+| **SDR-012** | Paginação com `Pageable` e limites | [Acessar Documento](SDRs/SDR-012-paginacao-pageable.md) |
+| **SDR-013** | Regras de negócio, cancelamento de matrícula e códigos HTTP | [Acessar Documento](SDRs/SDR-013-regras-de-negocio-e-codigos-http.md) |
+| **SDR-014** | Planejamento, Execução e Resultados do Trabalho Prático 2 | [Acessar Documento](SDRs/SDR-014-planejamento-execucao-resultados.md) |
+
+---
+## 📐 Specs e Planos
+
+| Documento | Link |
+| :--- | :--- |
+| Enunciado do Trabalho Prático 2 | [enunciado-tp2.md](specs/enunciado-tp2.md) |
+| Design aprovado (Cursos, Alunos e Matrículas) | [2026-11-05-cursos-matriculas-design.md](specs/2026-11-05-cursos-matriculas-design.md) |
+| Plano de implementação | [2026-11-05-cursos-matriculas-plan.md](plans/2026-11-05-cursos-matriculas-plan.md) |
 
 ---
 ## 🧠 O Papel dos SDRs no Projeto
 
 > Baseado nos princípios de **System Design Review (SDR)** de Bruno Russo, a criação de SDRs serve como governança para promover a detecção precoce de falhas, melhoria da qualidade da arquitetura, e garantia de escalabilidade. A omissão de documentar mudanças significativas gera débitos técnicos invisíveis.
 
-**Para a IA:** Se precisar tomar qualquer decisão arquitetural nova (como integração de banco de dados, sistema de mensageria, etc.), consulte os SDRs acima para alinhar-se à filosofia do projeto. Após a alteração, copie o modelo `SDRs/SDR-TEMPLATE.md`, gere o novo SDR (ex: `SDR-008`), e atualize IMEDIATAMENTE este índice.
+**Para a IA:** Se precisar tomar qualquer decisão arquitetural nova (como integração de banco de dados, sistema de mensageria, etc.), consulte os SDRs acima para alinhar-se à filosofia do projeto. Após a alteração, copie o modelo `SDRs/SDR-TEMPLATE.md`, gere o novo SDR (ex: `SDR-015`), e atualize IMEDIATAMENTE este índice.

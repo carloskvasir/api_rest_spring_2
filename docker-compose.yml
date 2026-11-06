@@ -1,8 +1,8 @@
 version: '3.8'
 
 services:
-  api-livros:
-    container_name: api-livros-dev
+  api-matriculas:
+    container_name: api-matriculas-dev
     build:
       context: .
       dockerfile: Dockerfile

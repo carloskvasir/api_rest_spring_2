@@ -13,7 +13,7 @@ echo "📦 1/5 Atualizando pom.xml..."
 ./mvnw versions:set -DnewVersion=$NEXT_VERSION -DgenerateBackupPoms=false -q
 
 echo "📄 2/5 Atualizando Swagger (OpenAPI)..."
-sed -i "s/\.version(\".*\")/.version(\"$NEXT_VERSION\")/g" src/main/java/com/api/livros/config/OpenApiConfig.java
+sed -i "s/\.version(\".*\")/.version(\"$NEXT_VERSION\")/g" src/main/java/com/api/matriculas/config/OpenApiConfig.java
 if [ -f "docs/openapi.json" ]; then
   sed -i "s/\"version\":\"[0-9]*\.[0-9]*\.[0-9]*\"/\"version\":\"$NEXT_VERSION\"/g" docs/openapi.json
 fi
@@ -63,7 +63,7 @@ JS_EOF
 node bin/generate_changelog.js
 
 echo "🏷️  4/5 Criando commit e TAG no Git..."
-git add pom.xml CHANGELOG.md bin/release.sh bin/generate_changelog.js src/main/java/com/api/livros/config/OpenApiConfig.java docs/openapi.json
+git add pom.xml CHANGELOG.md bin/release.sh bin/generate_changelog.js src/main/java/com/api/matriculas/config/OpenApiConfig.java docs/openapi.json
 git commit -m "chore: release da versao $NEXT_VERSION"
 git tag -a "v$NEXT_VERSION" -m "Release v$NEXT_VERSION"
 
