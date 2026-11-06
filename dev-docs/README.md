@@ -24,6 +24,7 @@ Este índice serve como um mapa rápido para as inteligências artificiais e des
 | **SDR-014** | Planejamento, Execução e Resultados do Trabalho Prático 2 | [Acessar Documento](SDRs/SDR-014-planejamento-execucao-resultados.md) |
 | **SDR-015** | Integração Contínua com GitHub Actions (Java 21 + `./mvnw`) | [Acessar Documento](SDRs/SDR-015-integracao-continua.md) |
 | **SDR-016** | Controle de concorrência com lock pessimista | [Acessar Documento](SDRs/SDR-016-controle-de-concorrencia.md) |
+| **SDR-017** | Erros padronizados em ProblemDetail e sem vazamento de detalhes | [Acessar Documento](SDRs/SDR-017-erros-padronizados.md) |
 
 ---
 ## 📐 Specs e Planos
@@ -39,4 +40,4 @@ Este índice serve como um mapa rápido para as inteligências artificiais e des
 
 > Baseado nos princípios de **System Design Review (SDR)** de Bruno Russo, a criação de SDRs serve como governança para promover a detecção precoce de falhas, melhoria da qualidade da arquitetura, e garantia de escalabilidade. A omissão de documentar mudanças significativas gera débitos técnicos invisíveis.
 
-**Para a IA:** Se precisar tomar qualquer decisão arquitetural nova (como integração de banco de dados, sistema de mensageria, etc.), consulte os SDRs acima para alinhar-se à filosofia do projeto. Após a alteração, copie o modelo `SDRs/SDR-TEMPLATE.md`, gere o novo SDR (ex: `SDR-017`), e atualize IMEDIATAMENTE este índice.
+**Para a IA:** Se precisar tomar qualquer decisão arquitetural nova (como integração de banco de dados, sistema de mensageria, etc.), consulte os SDRs acima para alinhar-se à filosofia do projeto. Após a alteração, copie o modelo `SDRs/SDR-TEMPLATE.md`, gere o novo SDR (ex: `SDR-018`), e atualize IMEDIATAMENTE este índice.

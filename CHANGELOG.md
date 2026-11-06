@@ -14,6 +14,7 @@ O formato baseia-se no [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0
 - Remoção lógica com `@SoftDelete` em cursos e alunos (SDR-011)
 - Seed de cursos, alunos e matrículas; console H2 em `/h2-console`
 - SDR-010 a SDR-014, design, plano e enunciado em `dev-docs/`
+- Erros do Spring MVC (rota inexistente, 405, 415, 406) em `ProblemDetail`, erro 500 genérico e stack trace desligado no corpo das respostas (SDR-017)
 - Ordenação (`sort`) restrita a propriedades permitidas por recurso, com desempate por `id`, evitando itens repetidos entre páginas (SDR-012)
 - Controle de concorrência com lock pessimista: matrícula `ATIVA` única por aluno e curso e exclusões seguras sob requisições simultâneas (SDR-016)
 - Integração contínua com GitHub Actions (Java 21, `./mvnw clean test`) em push e Pull Request (SDR-015)

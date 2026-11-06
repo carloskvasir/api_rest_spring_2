@@ -46,6 +46,9 @@ class GlobalExceptionHandlerTest {
         @GetMapping("/enum")
         void enumParam(@RequestParam Cor cor) { }
 
+        @GetMapping("/boom")
+        void boom() { throw new IllegalStateException("segredo interno do servidor"); }
+
         @GetMapping("/sort")
         void sort() {
             throw new PropertyReferenceException("xyz", TypeInformation.of(String.class), List.of());
@@ -111,5 +114,15 @@ class GlobalExceptionHandlerTest {
         mockMvc.perform(get("/stub/sort"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.title", is("Bad Request")));
+    }
+
+    @Test
+    void erroInesperadoDeveRetornar500ProblemDetailSemVazarDetalhes() throws Exception {
+        mockMvc.perform(get("/stub/boom"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.title", is("Internal Server Error")))
+                .andExpect(jsonPath("$.detail", not(containsString("segredo"))))
+                .andExpect(jsonPath("$.trace").doesNotExist())
+                .andExpect(jsonPath("$.timestamp", notNullValue()));
     }
 }
