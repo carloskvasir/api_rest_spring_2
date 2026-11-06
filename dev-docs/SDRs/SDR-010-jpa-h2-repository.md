@@ -17,6 +17,7 @@ O Trabalho Prático 2 (Cursos, Alunos e Matrículas) exige persistência em banc
 ## 3. System Design Review (Análise de Impacto)
 - **Arquitetura e Integração:** `controllers → services → repositories → models`. O `DataSeeder` passa pelos services, reaproveitando as regras de negócio.
 - **Segurança:** o console H2 está habilitado e **não** deve ir para produção; o banco é descartável e sem dados reais.
+- **Docker:** com `network_mode: host`, o console H2 falhava (500, `UnknownHostException`) por tentar resolver o hostname da máquina dentro do contêiner. O `docker-compose.yml` define `JAVA_TOOL_OPTIONS=-Dh2.bindAddress=127.0.0.1` para evitar essa consulta (descoberto no teste de ponta a ponta em contêiner).
 - **Desempenho e Escalabilidade:** consultas `exists*` evitam carregar coleções; paginação no banco (SDR-012).
 - **Riscos:** dados somem a cada reinício (aceitável no escopo); trocar para outro banco exige apenas dependência e `datasource`.
 
