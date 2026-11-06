@@ -31,7 +31,7 @@ Custo aproximado: US$ 12/mês (`s-1vcpu-2gb`), cobrado por hora; destrua ao term
 
 ## Observações
 - A chave do Resend fica em `/opt/api-matriculas/.env` (permissão 0600) no servidor e no estado do Terraform; não compartilhe o `terraform.tfstate`.
-- Dados em H2 **em memória**: reiniciar o container volta ao conjunto de exemplo. O console do H2 fica desligado (`SPRING_H2_CONSOLE_ENABLED=false`).
+- Dados em H2 **em memória**: reiniciar o container volta ao conjunto de exemplo. O console do H2 fica desligado (perfil `prod`).
 - É HTTP puro (sem domínio nem certificado), adequado para demonstração. Não publique dados reais.
 - Para acompanhar a instalação: informe `ssh_public_key` e leia `/var/log/api-matriculas-deploy.log` no servidor.
 - Para publicar outra versão: `terraform apply -var repo_ref=<tag-ou-branch>` recria o droplet.

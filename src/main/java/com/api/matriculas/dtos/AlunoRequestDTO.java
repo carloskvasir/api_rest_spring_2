@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 public record AlunoRequestDTO(
     @NotBlank(message = "O nome do aluno é obrigatório")
@@ -18,5 +19,6 @@ public record AlunoRequestDTO(
     @Min(value = 16, message = "A idade mínima é 16 anos")
     Integer idade,
 
+    @Pattern(regexp = Aluno.TELEFONE_REGEX, message = "O telefone informado é inválido")
     String telefone
 ) {}

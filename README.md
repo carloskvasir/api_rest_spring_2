@@ -15,7 +15,7 @@
 | Entidade | Campos | Regras |
 |---|---|---|
 | **Curso** | `id`, `nome`, `cargaHoraria`, `categoria`, `ativo` | nome obrigatório (mín. 5 caracteres); carga horária > 0; categoria e ativo obrigatórios |
-| **Aluno** | `id`, `nome`, `email`, `idade`, `telefone` | nome obrigatório; e-mail válido; idade mín. 16; telefone opcional |
+| **Aluno** | `id`, `nome`, `email`, `idade`, `telefone` | nome obrigatório; e-mail válido (com ponto no domínio); idade mín. 16; telefone opcional (8 a 20 caracteres: dígitos, `+`, `()`, espaço, hífen) |
 | **Matrícula** | `id`, `dataMatricula`, `status`, `aluno`, `curso` | data e status obrigatórios; aluno e curso obrigatórios. `status`: `ATIVA`, `CONCLUIDA`, `TRANCADA`, `CANCELADA`. No `POST` o aluno e o curso são informados por `alunoId` e `cursoId`; a resposta traz os objetos `aluno` e `curso` completos |
 
 Relacionamentos: um curso e um aluno possuem várias matrículas (`@OneToMany`); cada matrícula pertence a um aluno e a um curso (`@ManyToOne`).

@@ -14,7 +14,7 @@ Quem avalia o trabalho precisa testar a API sem instalar Java nem Docker localme
 - **Segredos:** `do_token` é variável `sensitive`; `terraform.tfvars` e o estado ficam no `.gitignore`.
 
 ## 3. System Design Review (Análise de Impacto)
-- **Segurança:** console do H2 desligado no deploy (`SPRING_H2_CONSOLE_ENABLED=false`); só a porta 80 é pública. O tráfego é HTTP sem TLS, aceitável só para demonstração com dados de exemplo.
+- **Segurança:** console do H2 desligado no deploy (perfil `prod`); só a porta 80 é pública. O tráfego é HTTP sem TLS, aceitável só para demonstração com dados de exemplo.
 - **Custo:** cobrança por hora enquanto o droplet existir; `terraform destroy` encerra.
 - **Riscos:** a imagem é compilada no servidor (3 a 6 minutos); o estado do Terraform é local; dados em H2 em memória se perdem ao reiniciar.
 

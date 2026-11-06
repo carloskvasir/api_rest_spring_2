@@ -11,7 +11,7 @@ permissions:
 jobs:
   build-and-test:
     name: Compilar e testar
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: 📥 Clonar o código
         uses: actions/checkout@v5
@@ -32,3 +32,28 @@ jobs:
         with:
           name: surefire-reports
           path: target/surefire-reports/
+
+  docker-build:
+    name: Imagem Docker (smoke test)
+    runs-on: ubuntu-24.04
+    needs: build-and-test
+    steps:
+      - name: 📥 Clonar o código
+        uses: actions/checkout@v5
+
+      - name: 🐳 Construir a imagem de producao
+        run: docker build -t api-matriculas .
+
+      - name: 🚦 Subir o container e validar a API
+        run: |
+          docker run -d --name api -p 8080:8080 -e SPRING_PROFILES_ACTIVE=prod api-matriculas
+          for i in $(seq 1 40); do
+            curl -sf http://localhost:8080/cursos && break
+            sleep 3
+          done
+          curl -sf http://localhost:8080/cursos | grep -q '"content"'
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/h2-console)" != "200"
+
+      - name: 📜 Logs do container
+        if: failure()
+        run: docker logs api

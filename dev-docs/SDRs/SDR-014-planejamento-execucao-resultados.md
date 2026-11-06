@@ -28,7 +28,7 @@ Cada tarefa seguiu RED → GREEN (o teste falhou antes de existir código de pro
 | 7 | `a15fcf7` | Seed e gerador de scaffold atualizado | 70 |
 | 8 | `7f9bd8a`, `0e9f45a`, `a567382` | SDRs, README, CHANGELOG, OpenAPI (versão 2.0.0) | 70 |
 | Revisão | (commit de correções) | Correções da revisão final independente | 74 |
-| Pós-revisão | (commits finais) | CI (SDR-015), console H2 no Docker e controle de concorrência (SDR-016) e ordenação restrita a propriedades permitidas (SDR-012) e erros padronizados (SDR-017) | 102 |
+| Pós-revisão | (commits finais) | CI (SDR-015), console H2 no Docker e controle de concorrência (SDR-016) e ordenação restrita a propriedades permitidas (SDR-012) e erros padronizados (SDR-017) | 114 |
 
 **Desvios e descobertas durante a execução** (todos cobertos por teste ou validação):
 1. `@ManyToOne(fetch = LAZY)` para entidade com `@SoftDelete` é recusado pelo Hibernate 6.5 → fetch padrão (SDR-011).
@@ -38,7 +38,7 @@ Cada tarefa seguiu RED → GREEN (o teste falhou antes de existir código de pro
 5. **Revisão final independente da branch** (leitura do código, 70 testes e cerca de 60 cenários manuais) encontrou dois pontos corrigidos por TDD (teste vermelho, depois verde): (a) `PUT /matriculas/{id}` com `ATIVA` reativava matrícula em curso inativo, contornando a regra 1 do enunciado; (b) `page=2147483647&size=100` retornava 500 com stack trace, agora 400 em `ProblemDetail`.
 
 ## 4. Resultados
-- `./mvnw clean test`: **102 testes, 0 falhas, `BUILD SUCCESS`** (unitários com Mockito, `@DataJpaTest`, `@WebMvcTest` e integração com MockMvc + H2).
+- `./mvnw clean test`: **114 testes, 0 falhas, `BUILD SUCCESS`** (unitários com Mockito, `@DataJpaTest`, `@WebMvcTest` e integração com MockMvc + H2).
 - Validação manual com `curl` na aplicação em execução (`./mvnw spring-boot:run`): listagem paginada e ordenada (200); matrícula duplicada ativa (409); curso inativo (422); matrícula válida (201); excluir curso e aluno com matrículas (409); validação de aluno com e-mail e idade inválidos (400 com `invalid_params`); cancelamento (204) mantendo o registro com status `CANCELADA`; `sort` inválido (400); `/h2-console` e Swagger UI na raiz (200).
 - Após as correções da revisão, a aplicação em execução confirmou: reativar matrícula em curso inativo → 422; página com offset gigante → 400.
 - A aplicação inicia sem erros e semeia 4 cursos (1 inativo), 4 alunos e 4 matrículas.
@@ -62,6 +62,13 @@ Cada tarefa seguiu RED → GREEN (o teste falhou antes de existir código de pro
 - ~~`@Email` aceitava `a@b`~~ — **corrigido** com regex que exige ponto no domínio (`Aluno.EMAIL_REGEX`).
 - ~~`bin/scaffold.sh` sobrescrevia arquivos existentes~~ — **corrigido**: aborta sem alterar nada se algum alvo já existir.
 - ~~URLs do repositório antigo em `release.sh`, `generate_changelog.js`, `cliff.toml` e CHANGELOG 2.0.0~~ — **corrigidas** (links das versões 1.x permanecem, pois as tags estão no repositório antigo).
+
+### Melhorias adicionais (2026-11-06)
+- **N+1 na listagem de matrículas — corrigido:** `@EntityGraph(aluno, curso)` em `MatriculaRepository.findAll(Pageable)`; teste mede as consultas com as estatísticas do Hibernate (no máximo 2: página + contagem). `LAZY` segue inviável com `@SoftDelete` (SDR-011).
+- **Perfil `prod` — feito:** `application-prod.properties` desliga console do H2 e log de SQL; o Terraform usa `SPRING_PROFILES_ACTIVE=prod` (SDR-018).
+- **Telefone — validado:** formato opcional (8 a 20 caracteres entre dígitos, `+`, parênteses, espaços e hífen).
+- **CI:** runner fixado em `ubuntu-24.04` (o Gitea mantém `ubuntu-latest`, pois seus rótulos dependem do runner próprio) e novo job `docker-build` que constrói a imagem, sobe o container e valida `/cursos` e o console H2 desligado (SDR-015).
+- **Decididos a não fazer:** (a) `@Version`/lock otimista: o `PUT` substitui o recurso inteiro e o lock pessimista já serializa escritas; detectar atualização perdida entre clientes exigiria `ETag`/`If-Match`, fora do enunciado. (b) Regra para `dataMatricula` no futuro: o enunciado não restringe e matrícula antecipada é plausível, então não há regra inventada.
 
 ## 6. Consequências
 - **Positivos:** entrega rastreável, com decisões, desvios e evidências documentados.

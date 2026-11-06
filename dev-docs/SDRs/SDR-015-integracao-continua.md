@@ -20,3 +20,6 @@ O projeto só tinha um workflow para Gitea (`.gitea/workflows/spring-ci.yml`) co
 ## 4. Consequências
 - **Positivos:** todo push e PR é compilado e testado automaticamente; regressões são detectadas cedo.
 - **Negativos:** não há deploy automático nem publicação do GitHub Pages (`docs/`), que continuam manuais (SDR-007).
+
+## Atualização (2026-11-06)
+Runner fixado em `ubuntu-24.04` e novo job `docker-build`: constrói a imagem do `Dockerfile`, sobe o container com o perfil `prod` e confirma que `/cursos` responde e que o console do H2 está desligado. O job só roda se os testes passarem.
