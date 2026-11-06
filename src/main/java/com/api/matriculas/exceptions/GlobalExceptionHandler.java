@@ -63,6 +63,11 @@ public class GlobalExceptionHandler {
                 "Erro interno ao processar a requisição.");
     }
 
+    @ExceptionHandler(OrdenacaoInvalidaException.class)
+    public ProblemDetail handleOrdenacaoNaoPermitida(OrdenacaoInvalidaException ex) {
+        return criar(HttpStatus.BAD_REQUEST, "Bad Request", "bad-request", ex.getMessage());
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ProblemDetail handleResourceNotFoundException(ResourceNotFoundException ex) {
         return criar(HttpStatus.NOT_FOUND, "Resource Not Found", "not-found", ex.getMessage());

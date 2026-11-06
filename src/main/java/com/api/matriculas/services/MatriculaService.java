@@ -15,11 +15,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Set;
+
 @Service
 @RequiredArgsConstructor
 public class MatriculaService {
 
     static final int IDADE_MINIMA = 16;
+
+    static final Set<String> ORDENAVEIS = Set.of("id", "dataMatricula", "status", "aluno.id", "aluno.nome", "curso.id", "curso.nome");
 
     private final MatriculaRepository matriculaRepository;
     private final AlunoService alunoService;
@@ -46,7 +50,8 @@ public class MatriculaService {
 
     @Transactional(readOnly = true)
     public Page<Matricula> listar(Pageable pageable) {
-        return matriculaRepository.findAll(pageable);
+        OrdenacaoPermitida.validar(pageable, ORDENAVEIS);
+        return matriculaRepository.findAll(OrdenacaoPermitida.comDesempate(pageable));
     }
 
     @Transactional(readOnly = true)

@@ -12,9 +12,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Set;
+
 @Service
 @RequiredArgsConstructor
 public class CursoService {
+
+    static final Set<String> ORDENAVEIS = Set.of("id", "nome", "cargaHoraria", "categoria", "ativo");
 
     private final CursoRepository cursoRepository;
     private final MatriculaRepository matriculaRepository;
@@ -26,7 +30,8 @@ public class CursoService {
 
     @Transactional(readOnly = true)
     public Page<Curso> listar(Pageable pageable) {
-        return cursoRepository.findAll(pageable);
+        OrdenacaoPermitida.validar(pageable, ORDENAVEIS);
+        return cursoRepository.findAll(OrdenacaoPermitida.comDesempate(pageable));
     }
 
     @Transactional(readOnly = true)

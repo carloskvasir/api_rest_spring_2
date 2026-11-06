@@ -50,7 +50,7 @@ Curso e aluno são removidos **logicamente** (`@SoftDelete`). `DELETE /matricula
 | | `PUT /matriculas/{id}` | Atualizar **somente o status** (`{"status": "CONCLUIDA"}`) | 200 |
 | | `DELETE /matriculas/{id}` | Cancelar matrícula | 204 |
 
-**Paginação** nas listagens: `GET /cursos?page=0&size=5&sort=nome,asc` (padrão `size=10`, máximo 100). A resposta tem o formato `{"content": [...], "page": {"size", "number", "totalElements", "totalPages"}}`.
+**Paginação** nas listagens: `GET /cursos?page=0&size=5&sort=nome,asc` (padrão `size=10`, máximo 100). O `sort` aceita: cursos `id, nome, cargaHoraria, categoria, ativo`; alunos `id, nome, email, idade, telefone`; matrículas `id, dataMatricula, status, aluno.id, aluno.nome, curso.id, curso.nome`. Outro campo retorna `400`. A resposta tem o formato `{"content": [...], "page": {"size", "number", "totalElements", "totalPages"}}`.
 
 **Exemplo de cadastro de matrícula** (com os dados de exemplo, o aluno 2 ainda não está no curso 2; repetir o comando retorna `409`, pois já existe matrícula ativa)
 ```bash
