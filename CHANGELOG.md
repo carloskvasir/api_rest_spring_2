@@ -14,11 +14,13 @@ O formato baseia-se no [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0
 - Remoção lógica com `@SoftDelete` em cursos e alunos (SDR-011)
 - Seed de cursos, alunos e matrículas; console H2 em `/h2-console`
 - SDR-010 a SDR-014, design, plano e enunciado em `dev-docs/`
+- Integração contínua com GitHub Actions (Java 21, `./mvnw clean test`) em push e Pull Request (SDR-015)
 
 ### 🔄 Changed
 - Pacote `com.api.livros` renomeado para `com.api.matriculas`; armazenamento em memória substituído por H2 com JPA
 - `bin/scaffold.sh` gera Model JPA, Repository, DTOs, Service e Controller paginado
 - README, OpenAPI (`docs/`) e `GEMINI.md` atualizados para o novo domínio
+- Workflow do Gitea corrigido (Java 17 → 21 e `mvn` → `./mvnw`)
 
 ### 🗑️ Removed
 - Domínio de Livros e Categorias, incluindo o endpoint `PATCH`
