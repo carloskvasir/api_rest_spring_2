@@ -21,6 +21,11 @@ resource "digitalocean_droplet" "api" {
   user_data = templatefile("${path.module}/cloud-init.yaml.tftpl", {
     repo_url = var.repo_url
     repo_ref = var.repo_ref
+    env_file = join("\n", [
+      "RESEND_API_KEY=${var.resend_api_key}",
+      "RESEND_FROM=${var.resend_from}",
+      "RESEND_DESTINO_FIXO=${var.resend_destino_fixo}",
+    ])
   })
 }
 

@@ -44,3 +44,22 @@ variable "ssh_allowed_cidrs" {
   type        = list(string)
   default     = ["0.0.0.0/0", "::/0"]
 }
+
+variable "resend_api_key" {
+  description = "Chave da API do Resend (https://resend.com/api-keys) para o e-mail de confirmacao de matricula. Vazia desliga o envio."
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "resend_destino_fixo" {
+  description = "No modo de teste do Resend (onboarding@resend.dev) so o e-mail dono da conta recebe; informe-o aqui para receber todas as confirmacoes."
+  type        = string
+  default     = ""
+}
+
+variable "resend_from" {
+  description = "Remetente. Padrao de teste do Resend; troque por um dominio verificado para enviar a qualquer destinatario."
+  type        = string
+  default     = "Matriculas <onboarding@resend.dev>"
+}

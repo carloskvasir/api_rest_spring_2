@@ -2,6 +2,11 @@
 do_token    = "dop_v1_..."
 alert_email = "voce@exemplo.com"
 
+# E-mail de confirmacao de matricula (Resend). Crie a conta em https://resend.com e gere a chave em API Keys.
+# No modo de teste, informe aqui o e-mail da sua conta Resend para receber as confirmacoes.
+resend_api_key      = "re_..."
+resend_destino_fixo = "voce@exemplo.com"
+
 # Opcionais
 # region         = "nyc3"
 # ssh_public_key = "ssh-ed25519 AAAA... voce@maquina"

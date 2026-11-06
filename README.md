@@ -95,6 +95,13 @@ A API sobe na porta `8080` com dados de exemplo (4 cursos, sendo 1 inativo; 4 al
 ### Opção 3 — Nuvem (DigitalOcean + Terraform)
 Para testar sem instalar nada localmente, veja o passo a passo em [`infra/digitalocean`](infra/digitalocean/README.md) (SDR-018).
 
+### E-mail de confirmação (opcional)
+Ao realizar uma matrícula a API pode enviar um e-mail de confirmação pelo [Resend](https://resend.com) (SDR-019). Desligado por padrão; para ligar:
+```bash
+RESEND_API_KEY=re_xxx RESEND_DESTINO_FIXO=seu@email.com ./mvnw spring-boot:run
+```
+No modo de teste do Resend, `RESEND_DESTINO_FIXO` deve ser o e-mail da sua conta Resend.
+
 ### Testes
 ```bash
 ./mvnw clean test

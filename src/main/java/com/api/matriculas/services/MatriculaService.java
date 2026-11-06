@@ -9,7 +9,9 @@ import com.api.matriculas.models.Curso;
 import com.api.matriculas.models.Matricula;
 import com.api.matriculas.models.StatusMatricula;
 import com.api.matriculas.repositories.MatriculaRepository;
+import com.api.matriculas.notificacoes.MatriculaRealizadaEvent;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,7 @@ public class MatriculaService {
     private final MatriculaRepository matriculaRepository;
     private final AlunoService alunoService;
     private final CursoService cursoService;
+    private final ApplicationEventPublisher eventos;
 
     @Transactional
     public Matricula realizar(MatriculaRequestDTO dto) {
@@ -45,7 +48,9 @@ public class MatriculaService {
         matricula.setStatus(dto.status());
         matricula.setAluno(aluno);
         matricula.setCurso(curso);
-        return matriculaRepository.save(matricula);
+        Matricula salva = matriculaRepository.save(matricula);
+        eventos.publishEvent(new MatriculaRealizadaEvent(aluno.getEmail(), aluno.getNome(), curso.getNome(), salva.getDataMatricula()));
+        return salva;
     }
 
     @Transactional(readOnly = true)

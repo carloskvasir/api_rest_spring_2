@@ -15,6 +15,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
+import com.api.matriculas.notificacoes.MatriculaRealizadaEvent;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -31,6 +33,7 @@ class MatriculaServiceTest {
     @Mock private MatriculaRepository matriculaRepository;
     @Mock private AlunoService alunoService;
     @Mock private CursoService cursoService;
+    @Mock private ApplicationEventPublisher eventos;
     @InjectMocks private MatriculaService matriculaService;
 
     private Aluno aluno;
@@ -217,5 +220,27 @@ class MatriculaServiceTest {
         assertThatThrownBy(() -> matriculaService.buscarPorId(5L))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessage("Matrícula não encontrada com id: 5");
+    }
+
+    @Test
+    void realizarDevePublicarEventoComDadosParaOEmail() {
+        aluno.setEmail("maria@x.com");
+        aluno_e_curso_existem();
+        when(matriculaRepository.existsByAlunoIdAndCursoIdAndStatus(1L, 2L, StatusMatricula.ATIVA)).thenReturn(false);
+        when(matriculaRepository.save(any(Matricula.class))).thenAnswer(i -> i.getArgument(0));
+
+        matriculaService.realizar(dto(StatusMatricula.ATIVA));
+
+        verify(eventos).publishEvent(new MatriculaRealizadaEvent("maria@x.com", "Maria", "Java Avancado", LocalDate.of(2026, 3, 1)));
+    }
+
+    @Test
+    void matriculaRejeitadaNaoDevePublicarEvento() {
+        curso.setAtivo(false);
+        aluno_e_curso_existem();
+
+        assertThatThrownBy(() -> matriculaService.realizar(dto(StatusMatricula.ATIVA))).isInstanceOf(BusinessRuleException.class);
+
+        verifyNoInteractions(eventos);
     }
 }

@@ -26,6 +26,7 @@ Este índice serve como um mapa rápido para as inteligências artificiais e des
 | **SDR-016** | Controle de concorrência com lock pessimista | [Acessar Documento](SDRs/SDR-016-controle-de-concorrencia.md) |
 | **SDR-017** | Erros padronizados em ProblemDetail e sem vazamento de detalhes | [Acessar Documento](SDRs/SDR-017-erros-padronizados.md) |
 | **SDR-018** | Deploy na DigitalOcean com Terraform | [Acessar Documento](SDRs/SDR-018-deploy-digitalocean-terraform.md) |
+| **SDR-019** | E-mail de confirmação de matrícula via Resend | [Acessar Documento](SDRs/SDR-019-email-confirmacao-resend.md) |
 
 ---
 ## 📐 Specs e Planos
