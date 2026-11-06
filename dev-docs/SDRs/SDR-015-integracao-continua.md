@@ -13,7 +13,7 @@ O projeto só tinha um workflow para Gitea (`.gitea/workflows/spring-ci.yml`) co
 
 ## 3. System Design Review (Análise de Impacto)
 - **Arquitetura e Integração:** usa as mesmas versões e o mesmo comando do desenvolvimento local, evitando "funciona na minha máquina".
-- **Segurança:** sem segredos e com permissão somente leitura; actions oficiais (`actions/*`) fixadas em versão maior.
+- **Segurança:** sem segredos e com permissão somente leitura; actions oficiais (`actions/*`) fixadas em versão maior (`checkout@v5` e `setup-java@v5`).
 - **Desempenho:** cache de dependências Maven reduz o tempo dos builds seguintes.
 - **Riscos:** o workflow só pode ser validado de fato após o primeiro push no GitHub; a sintaxe YAML foi validada localmente e o comando de build foi executado localmente.
 
