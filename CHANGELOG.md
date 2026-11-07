@@ -22,6 +22,7 @@ O formato baseia-se no [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0
 - Integração contínua com GitHub Actions (Java 21, `./mvnw clean test`) em push e Pull Request (SDR-015)
 
 ### 🔄 Changed
+- Participantes atualizados no README e Swagger/OpenAPI incluindo David Marlon junto a Carlos Kvasir Lima (alinhado ao projeto 1)
 - Listagem de matrículas sem N+1 (`@EntityGraph`), telefone validado, perfil `prod` (sem console H2) e CI com runner fixo e smoke test da imagem Docker (SDR-014, SDR-015)
 - Pendências conhecidas corrigidas: URL malformada (Tomcat) em `ProblemDetail`; decimais em campos inteiros e e-mail sem ponto no domínio retornam 400; `docs/openapi.json` com códigos de sucesso/erro e parâmetros de paginação; `bin/scaffold.sh` não sobrescreve arquivos; URLs de release apontam para o repositório atual (SDR-014, SDR-017)
 - Pacote `com.api.livros` renomeado para `com.api.matriculas`; armazenamento em memória substituído por H2 com JPA

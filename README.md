@@ -7,8 +7,9 @@
 
 **Trabalho Prático 2 — Desenvolvimento de API REST com Spring Boot.** API RESTful em **Java 21 + Spring Boot 3.3** para gerenciar **cursos**, **alunos** e **matrículas**, com persistência em **H2** via **Spring Data JPA**, **Bean Validation**, **paginação** com `Pageable` e regras de negócio. Os erros seguem a RFC 7807 (`ProblemDetail`) e as decisões de arquitetura estão registradas em SDRs (System Design Records).
 
-## 👥 Aluno
+## 👥 Alunos
 * Carlos Kvasir Lima
+* David Marlon
 
 ## 📝 Descrição da API
 

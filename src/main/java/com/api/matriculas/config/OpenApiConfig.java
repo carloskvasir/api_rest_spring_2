@@ -34,8 +34,9 @@ public class OpenApiConfig {
             Os dados são persistidos com **Spring Data JPA** em banco **H2** (em memória). A arquitetura é registrada
             em *SDRs (System Design Records)* e coberta por **Testes Unitários e de Integração**.
             
-            ### 👥 Aluno
+            ### 👥 Alunos
             * Carlos Kvasir Lima
+            * David Marlon
             
             ### Destaques:
             * **CRUD completo** de Cursos, Alunos e Matrículas, com relacionamentos `@OneToMany` / `@ManyToOne`.
@@ -66,7 +67,7 @@ public class OpenApiConfig {
                         .version("2.0.0")
                         .description(projectDescription)
                         .contact(new Contact()
-                                .name("Carlos Kvasir Lima")
+                                .name("Carlos Kvasir e David Marlon")
                                 .url("https://carloskvasir.dev")
                                 .email("gpg@kvasir.dev"))
                         .license(new License()

@@ -60,7 +60,7 @@ Unitários de service (Mockito) para as 4 regras de negócio e fluxos de CRUD; i
 ## 10. Documentação a atualizar
 - `README.md`: nome do aluno, descrição da API, endpoints, como executar (Docker e `./mvnw spring-boot:run`), console H2.
 - `docs/openapi.json` / `docs/index.html` regenerados; `CHANGELOG.md` com intenção do pacote; `GEMINI.md` ajustado onde citar Livros; versão no `pom.xml`.
-- Nome do aluno no README: **mantém Carlos Kvasir Lima** (consta hoje junto com David Marlon; o enunciado diz trabalho individual, por isso fica só o dono do repositório — decisão minha, o usuário confirma).
+- Nome dos alunos no README e OpenAPI: **Carlos Kvasir Lima e David Marlon** (participantes mantidos conforme o projeto 1).
 
 ## 11. Entrega em commits atômicos
 Dependências/config → models + repositories → DTOs + services (regras) → controllers + handler → seed/scaffold → testes → documentação (SDRs, README, CHANGELOG, OpenAPI).
